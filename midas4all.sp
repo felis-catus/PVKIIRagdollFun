@@ -1,11 +1,12 @@
 #include <sourcemod>
 #pragma semicolon 1
-#define PL_VERSION "0.1"
+#define PL_VERSION "0.2"
 
 new Handle:cvar_enabled;
 new Handle:cvar_admins;
 new Handle:cvar_flag;
 new Handle:cvar_midas4all;
+new Handle:cvar_ragdolltype;
 
 new bool:clientHasMidas[MAXPLAYERS+1];
 
@@ -21,12 +22,25 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
 	cvar_enabled = CreateConVar("sm_midas4all_enabled", "1", "Enable midas4all.");
-	cvar_admins = CreateConVar("sm_midas4all_admins", "1", "Admins get midas touch.");
+	cvar_admins = CreateConVar("sm_midas4all_admins", "1", "Admins get the midas touch.");
 	cvar_flag = CreateConVar("sm_midas4all_flag", "b", "Admin flag required for midas.");
 	cvar_midas4all = CreateConVar("sm_midas4all_everyone", "0", "midas4ALL");
+	cvar_ragdolltype = CreateConVar("sm_midas4all_ragdolltype", "6", "Ragdoll type, see readme for more info. 6 is default (midas)");
 	
 	HookEvent("player_spawn", OnPlayerSpawn);
 	HookEvent("player_death", OnPlayerDeath);
+	
+	HookConVarChange(cvar_enabled, cvHookEnabled);
+	
+	AutoExecConfig(true, "midas4all");
+}
+
+public cvHookEnabled(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	if (StrEqual(newVal, "0", false))
+	{
+		Reset();
+	}
 }
 
 public OnMapStart()
@@ -75,7 +89,7 @@ public OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	if (clientHasMidas[attacker])
 	{
 		new ragdoll = GetEntPropEnt(victim, Prop_Send, "m_hRagdoll");
-		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", 6);
+		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", GetConVarInt(cvar_ragdolltype));
 	}
 }
 
@@ -102,10 +116,18 @@ public GiveMidas(client)
 		{
 			clientHasMidas[client] = true;
 		}
+		else
+		{
+			clientHasMidas[client] = false;
+		}
 	}
 	else if (GetConVarBool(cvar_midas4all))
 	{
 		clientHasMidas[client] = true;
+	}
+	else
+	{
+		clientHasMidas[client] = false;
 	}
 }
 

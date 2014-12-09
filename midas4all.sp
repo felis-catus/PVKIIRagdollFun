@@ -1,6 +1,6 @@
 #include <sourcemod>
 #pragma semicolon 1
-#define PL_VERSION "0.2"
+#define PL_VERSION "0.3"
 
 new Handle:cvar_enabled;
 new Handle:cvar_admins;
@@ -9,6 +9,7 @@ new Handle:cvar_midas4all;
 new Handle:cvar_ragdolltype;
 
 new bool:clientHasMidas[MAXPLAYERS+1];
+new ragdollType;
 
 public Plugin:myinfo = 
 {
@@ -31,8 +32,11 @@ public OnPluginStart()
 	HookEvent("player_death", OnPlayerDeath);
 	
 	HookConVarChange(cvar_enabled, cvHookEnabled);
+	HookConVarChange(cvar_ragdolltype, cvHookRagdollType);
 	
 	AutoExecConfig(true, "midas4all");
+	
+	Reset();
 }
 
 public cvHookEnabled(Handle:cvar, const String:oldVal[], const String:newVal[])
@@ -40,6 +44,17 @@ public cvHookEnabled(Handle:cvar, const String:oldVal[], const String:newVal[])
 	if (StrEqual(newVal, "0", false))
 	{
 		Reset();
+	}
+}
+
+public cvHookRagdollType(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	new val = StringToInt(newVal, 10);
+	if (val >= 12)
+	{
+		LogAction(-1, -1, "Ragdoll type 12+ will crash clients! Reverting to default.");
+		ragdollType = 6;
+		SetConVarInt(cvar_ragdolltype, 6, false, false); 
 	}
 }
 
@@ -89,11 +104,18 @@ public OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	if (clientHasMidas[attacker])
 	{
 		new ragdoll = GetEntPropEnt(victim, Prop_Send, "m_hRagdoll");
-		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", GetConVarInt(cvar_ragdolltype));
+		
+		if (ragdoll < 0)
+		{
+			ThrowError("Couldn't get the player's ragdoll.");
+			return;
+		}
+		
+		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", ragdollType);
 	}
 }
 
-public bool:CheckFlag(client)
+public bool:CheckAdminFlag(client)
 {
 	if (GetUserFlagBits(client) == 0)
 		return false;
@@ -112,7 +134,7 @@ public GiveMidas(client)
 {
 	if (GetConVarBool(cvar_admins))
 	{
-		if (CheckFlag(client))
+		if (CheckAdminFlag(client))
 		{
 			clientHasMidas[client] = true;
 		}
@@ -137,4 +159,5 @@ public Reset()
 	{
 		clientHasMidas[i] = false;
 	}
+	ragdollType = 6;
 }

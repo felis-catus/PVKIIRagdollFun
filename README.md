@@ -47,7 +47,7 @@ NOTE: Dismemberment only works on Berserker.
 - 3: Dismemberment right arm
 - 4: ? (normal ragdoll)
 - 5: Frozen ragdoll
-- 6: Midas touch
+- 6: Midas touch (default)
 - 7: Electric
 - 8: Electric Dissolve
 - 9: Burnt ragdoll (broken)

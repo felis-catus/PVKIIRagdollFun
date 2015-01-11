@@ -56,6 +56,10 @@ public cvHookRagdollType(Handle:cvar, const String:oldVal[], const String:newVal
 		ragdollType = 6;
 		SetConVarInt(cvar_ragdolltype, 6, false, false); 
 	}
+	else
+	{
+		ragdollType = val;
+	}
 }
 
 public OnMapStart()

@@ -1,7 +1,7 @@
-PVKIIRagdollFun (midas4all)
+midas4all
 =========
 
-With this simple plugin, when a player is killed by admin the ragdoll will turn into gold, electric or even ghostly!
+With this simple plugin, you can give midas touch to admins or everyone!
 
 Special thanks to Spirrwell for finding out how to do this.
 

@@ -1,41 +1,41 @@
-midas4all
+RagdollFun (midas4all)
 =========
 
-With this simple plugin, you can give midas touch to admins or everyone!
+With this simple plugin, when a player is killed by admin the ragdoll will turn into gold, electric or even ghostly!
 
 Special thanks to Spirrwell for finding out how to do this.
 
 Installation
 -------
-- Move midas4all.smx to ../addons/sourcemod/plugins. Done!
+- Move ragdollfun.smx to ../addons/sourcemod/plugins. Done!
 
 CVARs
 -------
 ```
-// Admins get the midas touch.
+// Admins get the ragdoll effects.
 // -
 // Default: "1"
-sm_midas4all_admins "1"
+sm_ragdollfun_admins "1"
 
-// Enable midas4all.
+// Enable RagdollFun.
 // -
 // Default: "1"
-sm_midas4all_enabled "1"
+sm_ragdollfun_enabled "1"
 
-// midas4ALL
+// midas4all
 // -
 // Default: "0"
-sm_midas4all_everyone "0"
+sm_ragdollfun_everyone "0"
 
-// Admin flag required for midas.
+// Admin flag required for ragdoll effects.
 // -
 // Default: "b"
-sm_midas4all_flag "b"
+sm_ragdollfun_flag "b"
 
 // Ragdoll type, see readme for more info. 6 is default (midas)
 // -
 // Default: "6"
-sm_midas4all_ragdolltype "6"
+sm_ragdollfun_ragdolltype "6"
 ```
 
 Ragdoll Types

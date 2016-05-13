@@ -1,15 +1,20 @@
 #include <sourcemod>
+
 #pragma semicolon 1
-#define PL_VERSION "0.4"
+
+#define PL_VERSION "0.5"
+#define MAX_RAGDOLLTYPES 12
+#define DEFAULT_RAGDOLLTYPE 6
 
 new Handle:cvar_enabled;
+new Handle:cvar_keyvalues;
 new Handle:cvar_admins;
 new Handle:cvar_flag;
 new Handle:cvar_midas4all;
 new Handle:cvar_ragdolltype;
 
-new bool:clientHasMidas[MAXPLAYERS+1];
-new ragdollType;
+new bool:clientHasRagdoll[MAXPLAYERS+1];
+new bool:clientRagdollType[MAXPLAYERS+1];
 
 public Plugin:myinfo = 
 {
@@ -23,6 +28,7 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
 	cvar_enabled = CreateConVar("sm_ragdollfun_enabled", "1", "Enable RagdollFun.");
+	cvar_keyvalues = CreateConVar("sm_ragdollfun_keyvalues", "0", "Use KeyValues to get a ragdoll type for each player. This will ignore all other cvars!");
 	cvar_admins = CreateConVar("sm_ragdollfun_admins", "1", "Admins get the ragdoll effects.");
 	cvar_flag = CreateConVar("sm_ragdollfun_flag", "b", "Admin flag required for ragdoll effects.");
 	cvar_midas4all = CreateConVar("sm_ragdollfun_everyone", "0", "midas4all");
@@ -32,6 +38,7 @@ public OnPluginStart()
 	HookEvent("player_death", OnPlayerDeath);
 	
 	HookConVarChange(cvar_enabled, cvHookEnabled);
+	HookConVarChange(cvar_keyvalues, cvHookKeyValues);
 	HookConVarChange(cvar_ragdolltype, cvHookRagdollType);
 	
 	AutoExecConfig(true, "ragdollfun");
@@ -47,18 +54,27 @@ public cvHookEnabled(Handle:cvar, const String:oldVal[], const String:newVal[])
 	}
 }
 
+public cvHookKeyValues(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	Reset();
+}
+
 public cvHookRagdollType(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
 	new val = StringToInt(newVal, 10);
-	if (val >= 12)
+	if (val >= MAX_RAGDOLLTYPES)
 	{
-		LogAction(-1, -1, "Ragdoll type 12+ will crash the clients! Reverting to default.");
-		ragdollType = 6;
-		SetConVarInt(cvar_ragdolltype, 6, false, false); 
+		LogAction(-1, -1, "Ragdoll type over the max amount, this would crash the clients. Reverting to default.");
+		
+		for (new i = 1; i < MaxClients; i++)
+			clientRagdollType[i] = DEFAULT_RAGDOLLTYPE;
+		
+		SetConVarInt(cvar_ragdolltype, DEFAULT_RAGDOLLTYPE, false, false); 
 	}
 	else
 	{
-		ragdollType = val;
+		for (new i = 1; i < MaxClients; i++)
+			clientRagdollType[i] = val;
 	}
 }
 
@@ -72,7 +88,7 @@ public OnClientConnected(client)
 	if (!GetConVarBool(cvar_enabled))
 		return;
 	
-	GiveMidas(client);
+	GiveRagdoll(client);
 }
 
 public OnClientDisconnect(client)
@@ -80,7 +96,8 @@ public OnClientDisconnect(client)
 	if (!GetConVarBool(cvar_enabled))
 		return;
 	
-	clientHasMidas[client] = false;
+	clientHasRagdoll[client] = false;
+	clientRagdollType[client] = DEFAULT_RAGDOLLTYPE;
 }
 
 public OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
@@ -91,7 +108,7 @@ public OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	new userid = GetEventInt(event, "userid");
 	new client = GetClientOfUserId(userid);
 	
-	GiveMidas(client);
+	GiveRagdoll(client);
 }
 
 public OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
@@ -105,21 +122,33 @@ public OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	new victimId = GetEventInt(event, "userid");
 	new victim = GetClientOfUserId(victimId);
 	
-	if (clientHasMidas[attacker])
+	if (clientHasRagdoll[attacker] && clientRagdollType[attacker] < MAX_RAGDOLLTYPES)
 	{
 		new ragdoll = GetEntPropEnt(victim, Prop_Send, "m_hRagdoll");
 		
-		if (ragdoll < 0)
+		if (ragdoll == -1)
 		{
 			ThrowError("Couldn't get the player's ragdoll.");
 			return;
 		}
 		
-		if (ragdollType < 12)
-		{
-			SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", ragdollType);
-		}
+		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", clientRagdollType[attacker]);
 	}
+}
+
+public GetRagdollTypeForSteamID(const String:steamid[])
+{
+	new Handle:kv = CreateKeyValues("RagdollFun");
+	decl String:path[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, path, sizeof(path), "configs/ragdollfun.txt");
+	FileToKeyValues(kv, path);
+	
+	if (!KvJumpToKey(kv, steamid))
+		return -1;
+	
+	new type = KvGetNum(kv, "type");
+	CloseHandle(kv);
+	return type;
 }
 
 public bool:CheckAdminFlag(client)
@@ -137,26 +166,41 @@ public bool:CheckAdminFlag(client)
 		return false;
 }
 
-public GiveMidas(client)
+public GiveRagdoll(client)
 {
-	if (GetConVarBool(cvar_midas4all))
+	if (GetConVarBool(cvar_keyvalues))
 	{
-		clientHasMidas[client] = true;
-	}
-	else if (GetConVarBool(cvar_admins))
-	{
-		if (CheckAdminFlag(client))
+		decl String:steamID[64];
+		GetClientAuthId(client, AuthId_Steam2, steamID, sizeof(steamID));
+		new type = GetRagdollTypeForSteamID(steamID);
+		
+		if (type != -1 && type < MAX_RAGDOLLTYPES)
 		{
-			clientHasMidas[client] = true;
-		}
-		else
-		{
-			clientHasMidas[client] = false;
+			clientHasRagdoll[client] = true;
+			clientRagdollType[client] = type;
 		}
 	}
 	else
 	{
-		clientHasMidas[client] = false;
+		if (GetConVarBool(cvar_midas4all))
+		{
+			clientHasRagdoll[client] = true;
+		}
+		else if (GetConVarBool(cvar_admins))
+		{
+			if (CheckAdminFlag(client))
+			{
+				clientHasRagdoll[client] = true;
+			}
+			else
+			{
+				clientHasRagdoll[client] = false;
+			}
+		}
+		else
+		{
+			clientHasRagdoll[client] = false;
+		}
 	}
 }
 
@@ -164,7 +208,7 @@ public Reset()
 {
 	for (new i = 1; i < MaxClients; i++)
 	{
-		clientHasMidas[i] = false;
+		clientHasRagdoll[i] = false;
+		clientRagdollType[i] = DEFAULT_RAGDOLLTYPE;
 	}
-	ragdollType = 6;
 }

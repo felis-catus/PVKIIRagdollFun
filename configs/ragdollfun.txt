@@ -1,0 +1,26 @@
+// IMPORTANT: You need to set sm_ragdollfun_keyvalues to 1 if you want to use this file!
+
+// Here you can set ragdoll types for each SteamID
+// Example:
+//	"STEAM_0:1:47279666"
+//	{
+//		"type"	"6"
+//	}
+
+// List of ragdoll types (Beta 3.4):
+//	1: Dismemberment head (Berserker only)
+//	2: Dismemberment left arm (Berserker only)
+//	3: Dismemberment right arm (Berserker only)
+//	4: Implode (won't work yet)
+//	5: Frozen ragdoll
+//	6: Midas touch (default)
+//	7: Electric
+//	8: Electric Dissolve
+//	9: Burnt ragdoll (broken)
+//	10: Static ragdoll (PVK2_DEATH_STONE)
+//	11: Ghost death
+
+"RagdollFun"
+{
+	// Add SteamIDs here
+}

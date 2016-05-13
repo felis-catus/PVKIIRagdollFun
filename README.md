@@ -32,6 +32,11 @@ sm_ragdollfun_everyone "0"
 // Default: "b"
 sm_ragdollfun_flag "b"
 
+// Use KeyValues to get a ragdoll type for each player. This will ignore all other cvars!
+// -
+// Default: "0"
+sm_ragdollfun_keyvalues "0"
+
 // Ragdoll type, see readme for more info. 6 is default (midas)
 // -
 // Default: "6"
@@ -45,13 +50,13 @@ NOTE: Dismemberment only works on Berserker.
 - 1: Dismemberment head
 - 2: Dismemberment left arm
 - 3: Dismemberment right arm
-- 4: ? (normal ragdoll)
+- 4: Implode (won't work yet)
 - 5: Frozen ragdoll
 - 6: Midas touch (default)
 - 7: Electric
 - 8: Electric Dissolve
 - 9: Burnt ragdoll (broken)
 - 10: Static ragdoll (PVK2_DEATH_STONE)
-- 11: Ghost death (lts_gravedanger)
+- 11: Ghost death
 
 12+ crashes the client.

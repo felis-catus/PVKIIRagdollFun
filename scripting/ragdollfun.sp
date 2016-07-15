@@ -2,7 +2,7 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "0.5"
+#define PL_VERSION "0.6"
 #define MAX_RAGDOLLTYPES 12
 #define DEFAULT_RAGDOLLTYPE 6
 
@@ -14,7 +14,7 @@ new Handle:cvar_midas4all;
 new Handle:cvar_ragdolltype;
 
 new bool:clientHasRagdoll[MAXPLAYERS+1];
-new bool:clientRagdollType[MAXPLAYERS+1];
+new clientRagdollType[MAXPLAYERS+1];
 
 public Plugin:myinfo = 
 {
@@ -209,6 +209,6 @@ public Reset()
 	for (new i = 1; i < MaxClients; i++)
 	{
 		clientHasRagdoll[i] = false;
-		clientRagdollType[i] = DEFAULT_RAGDOLLTYPE;
+		clientRagdollType[i] = GetConVarInt(cvar_ragdolltype);
 	}
 }

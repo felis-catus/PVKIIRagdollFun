@@ -1,7 +1,7 @@
-RagdollFun (midas4all)
+RagdollFun
 =========
 
-With this simple plugin, when a player is killed by admin the ragdoll will turn into gold, electric or even ghostly!
+Originally named "midas4all", this simple plugin gives you ability to use ragdoll effects on player deaths. You can set different ragdolls for each player, or use a single type for all admins/players.
 
 Special thanks to Spirrwell for finding out how to do this.
 

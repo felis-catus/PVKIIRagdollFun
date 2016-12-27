@@ -2,7 +2,7 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "0.6"
+#define PL_VERSION "0.7"
 #define MAX_RAGDOLLTYPES 12
 #define DEFAULT_RAGDOLLTYPE 6
 
@@ -56,7 +56,10 @@ public cvHookEnabled(Handle:cvar, const String:oldVal[], const String:newVal[])
 
 public cvHookKeyValues(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
-	Reset();
+	for (new i = 1; i < MaxClients; i++)
+	{
+		GiveRagdoll(i);
+	}
 }
 
 public cvHookRagdollType(Handle:cvar, const String:oldVal[], const String:newVal[])
@@ -168,6 +171,9 @@ public bool:CheckAdminFlag(client)
 
 public GiveRagdoll(client)
 {
+	if (!IsClientInGame(client))
+		return;
+	
 	if (GetConVarBool(cvar_keyvalues))
 	{
 		decl String:steamID[64];
@@ -182,6 +188,8 @@ public GiveRagdoll(client)
 	}
 	else
 	{
+		clientRagdollType[client] = GetConVarInt(cvar_ragdolltype);
+		
 		if (GetConVarBool(cvar_midas4all))
 		{
 			clientHasRagdoll[client] = true;
@@ -209,6 +217,6 @@ public Reset()
 	for (new i = 1; i < MaxClients; i++)
 	{
 		clientHasRagdoll[i] = false;
-		clientRagdollType[i] = GetConVarInt(cvar_ragdolltype);
+		clientRagdollType[i] = DEFAULT_RAGDOLLTYPE;
 	}
 }

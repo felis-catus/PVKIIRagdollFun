@@ -5,9 +5,13 @@ Originally named "midas4all", this simple plugin gives you ability to use ragdol
 
 Special thanks to Spirrwell for finding out how to do this.
 
+Download
+-------
+https://github.com/felis-catus/PVKIIRagdollFun/releases/download/v0.7/RagdollFun.zip
+
 Installation
 -------
-- Move ragdollfun.smx to ../addons/sourcemod/plugins. Done!
+- Extract to ../pvkii/addons/sourcemod. Done!
 
 CVARs
 -------
@@ -58,5 +62,3 @@ NOTE: Dismemberment only works on Berserker.
 - 9: Burnt ragdoll (broken)
 - 10: Static ragdoll (PVK2_DEATH_STONE)
 - 11: Ghost death
-
-12+ crashes the client.

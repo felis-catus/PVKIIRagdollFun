@@ -6,8 +6,14 @@
 //	{
 //		"type"	"6"
 //	}
+//
+// You can also use Steam3 IDs:
+//	"[U:1:94559333]"
+//	{
+//		"type"	"6"
+//	}
 
-// List of ragdoll types (Beta 3.4):
+// List of ragdoll types (as of Beta 3.5):
 //	1: Dismemberment head (Berserker only)
 //	2: Dismemberment left arm (Berserker only)
 //	3: Dismemberment right arm (Berserker only)

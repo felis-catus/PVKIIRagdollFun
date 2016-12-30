@@ -2,7 +2,7 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "0.7"
+#define PL_VERSION "1.0"
 #define MAX_RAGDOLLTYPES 12
 #define DEFAULT_RAGDOLLTYPE 6
 
@@ -22,7 +22,7 @@ public Plugin:myinfo =
 	author = "Felis, Spirrwell",
 	description = "fun with ragdolls",
 	version = PL_VERSION,
-	url = "loli.dance"
+	url = ""
 }
 
 public OnPluginStart()
@@ -31,7 +31,7 @@ public OnPluginStart()
 	cvar_keyvalues = CreateConVar("sm_ragdollfun_keyvalues", "0", "Use KeyValues to get a ragdoll type for each player. This will ignore all other cvars!");
 	cvar_admins = CreateConVar("sm_ragdollfun_admins", "1", "Admins get the ragdoll effects.");
 	cvar_flag = CreateConVar("sm_ragdollfun_flag", "b", "Admin flag required for ragdoll effects.");
-	cvar_midas4all = CreateConVar("sm_ragdollfun_everyone", "0", "midas4all");
+	cvar_midas4all = CreateConVar("sm_ragdollfun_everyone", "0", "Everyone gets ragdoll effects.");
 	cvar_ragdolltype = CreateConVar("sm_ragdollfun_ragdolltype", "6", "Ragdoll type, see readme for more info. 6 is default (midas)");
 	
 	HookEvent("player_spawn", OnPlayerSpawn);
@@ -179,6 +179,12 @@ public GiveRagdoll(client)
 		decl String:steamID[64];
 		GetClientAuthId(client, AuthId_Steam2, steamID, sizeof(steamID));
 		new type = GetRagdollTypeForSteamID(steamID);
+		
+		if (type == -1)
+		{
+			GetClientAuthId(client, AuthId_Steam3, steamID, sizeof(steamID));
+			type = GetRagdollTypeForSteamID(steamID);
+		}
 		
 		if (type != -1 && type < MAX_RAGDOLLTYPES)
 		{

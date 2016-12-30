@@ -26,7 +26,7 @@ sm_ragdollfun_admins "1"
 // Default: "1"
 sm_ragdollfun_enabled "1"
 
-// midas4all
+// Everyone gets ragdoll effects.
 // -
 // Default: "0"
 sm_ragdollfun_everyone "0"
@@ -62,3 +62,24 @@ NOTE: Dismemberment only works on Berserker.
 - 9: Burnt ragdoll (broken)
 - 10: Static ragdoll (PVK2_DEATH_STONE)
 - 11: Ghost death
+
+How to set ragdoll types for each player
+-------
+Important: You need to set sm_ragdollfun_keyvalues to 1 to make this work.
+
+Go to ../addons/sourcemod/configs and open the file "ragdollfun.txt", there you can set ragdoll types for each SteamID.
+
+Example:
+```
+"STEAM_0:1:47279666"
+{
+        "type"  "6"
+}
+
+// You can also use Steam3 IDs
+"[U:1:94559333]"
+{
+        "type"  "6"
+}
+```
+

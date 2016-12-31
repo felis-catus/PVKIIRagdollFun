@@ -67,19 +67,19 @@ How to set ragdoll types for each player
 -------
 Important: You need to set sm_ragdollfun_keyvalues to 1 to make this work.
 
-Go to ../addons/sourcemod/configs and open the file "ragdollfun.txt", there you can set ragdoll types for each SteamID.
+Go to ../addons/sourcemod/configs and open the file "ragdollfun.txt", from there you can set ragdoll types for each SteamID.
 
 Example:
 ```
 "STEAM_0:1:47279666"
 {
-        "type"  "6"
+	"type"  "6"
 }
 
 // You can also use Steam3 IDs
 "[U:1:94559333]"
 {
-        "type"  "6"
+	"type"  "6"
 }
 ```
 

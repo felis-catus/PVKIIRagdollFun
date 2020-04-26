@@ -13,11 +13,11 @@
 //		"type"	"6"
 //	}
 
-// List of ragdoll types (as of Beta 3.5):
-//	1: Dismemberment head (Berserker only)
-//	2: Dismemberment left arm (Berserker only)
-//	3: Dismemberment right arm (Berserker only)
-//	4: Implode (won't work yet)
+// List of ragdoll types (as of 0.4.2.2):
+//	1: Dismemberment head
+//	2: Dismemberment left arm
+//	3: Dismemberment right arm
+//	4: Implode
 //	5: Frozen ragdoll
 //	6: Midas touch (default)
 //	7: Electric
@@ -25,6 +25,9 @@
 //	9: Burnt ragdoll (broken)
 //	10: Static ragdoll (PVK2_DEATH_STONE)
 //	11: Ghost death
+//	12: Dismemberment left leg
+//	13: Dismemberment right leg
+//	14: Dismemberment both legs
 
 "RagdollFun"
 {

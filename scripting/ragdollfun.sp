@@ -2,8 +2,8 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "1.0"
-#define MAX_RAGDOLLTYPES 12
+#define PL_VERSION "1.1"
+#define MAX_RAGDOLLTYPES 15
 #define DEFAULT_RAGDOLLTYPE 6
 
 new Handle:cvar_enabled;
@@ -67,7 +67,7 @@ public cvHookRagdollType(Handle:cvar, const String:oldVal[], const String:newVal
 	new val = StringToInt(newVal, 10);
 	if (val >= MAX_RAGDOLLTYPES)
 	{
-		LogAction(-1, -1, "Ragdoll type over the max amount, this would crash the clients. Reverting to default.");
+		LogAction(-1, -1, "Ragdoll type over the max amount, reverting to default.");
 		
 		for (new i = 1; i < MaxClients; i++)
 			clientRagdollType[i] = DEFAULT_RAGDOLLTYPE;
@@ -127,15 +127,7 @@ public OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	
 	if (clientHasRagdoll[attacker] && clientRagdollType[attacker] < MAX_RAGDOLLTYPES)
 	{
-		new ragdoll = GetEntPropEnt(victim, Prop_Send, "m_hRagdoll");
-		
-		if (ragdoll == -1)
-		{
-			ThrowError("Couldn't get the player's ragdoll.");
-			return;
-		}
-		
-		SetEntProp(ragdoll, Prop_Send, "m_iDismemberment", clientRagdollType[attacker]);
+		SetEntProp(victim, Prop_Send, "m_iRagdollDismemberment", clientRagdollType[attacker]);
 	}
 }
 

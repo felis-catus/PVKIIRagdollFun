@@ -49,12 +49,10 @@ sm_ragdollfun_ragdolltype "6"
 
 Ragdoll Types
 -------
-NOTE: Dismemberment only works on Berserker.
-
 - 1: Dismemberment head
 - 2: Dismemberment left arm
 - 3: Dismemberment right arm
-- 4: Implode (won't work yet)
+- 4: Implode
 - 5: Frozen ragdoll
 - 6: Midas touch (default)
 - 7: Electric
@@ -62,6 +60,9 @@ NOTE: Dismemberment only works on Berserker.
 - 9: Burnt ragdoll (broken)
 - 10: Static ragdoll (PVK2_DEATH_STONE)
 - 11: Ghost death
+- 12: Dismemberment left leg
+- 13: Dismemberment right leg
+- 14: Dismemberment both legs
 
 How to set ragdoll types for each player
 -------

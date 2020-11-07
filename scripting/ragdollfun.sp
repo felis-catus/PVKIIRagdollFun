@@ -2,7 +2,7 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "1.1"
+#define PL_VERSION "1.2"
 #define MAX_RAGDOLLTYPES 15
 #define DEFAULT_RAGDOLLTYPE 6
 
@@ -139,7 +139,10 @@ public GetRagdollTypeForSteamID(const String:steamid[])
 	FileToKeyValues(kv, path);
 	
 	if (!KvJumpToKey(kv, steamid))
+	{
+		CloseHandle(kv);
 		return -1;
+	}
 	
 	new type = KvGetNum(kv, "type");
 	CloseHandle(kv);

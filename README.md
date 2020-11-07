@@ -7,7 +7,7 @@ Special thanks to Spirrwell for finding out how to do this.
 
 Download
 -------
-https://github.com/felis-catus/PVKIIRagdollFun/releases/download/v1.1/PVKIIRagdollFun.zip
+https://github.com/felis-catus/PVKIIRagdollFun/releases/download/v1.2/PVKIIRagdollFun.zip
 
 Installation
 -------
